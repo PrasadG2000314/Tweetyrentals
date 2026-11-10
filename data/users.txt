@@ -1,0 +1,4 @@
+ADMIN|USR-1001|commander_zane|zane@antigrav.io|admin123|AGY-7788-KEY|Orbital Fleet Operations
+REGULAR|USR-1002|sarah_connor|sarah@sky.net|riderpass|false|30|+1-555-0101
+REGULAR|USR-1003|tony_stark|tony@stark.corp|jarvis3000|true|240|+1-555-0999
+

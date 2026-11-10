@@ -1,0 +1,5 @@
+HOVERBOARD|VEH-HB-01|Quantum Glide 3000|AeroGrav Dynamics|35.0|4|0.92|AVAILABLE|115.0|true|Plasma-Grip
+HOVERBOARD|VEH-HB-02|StreetLev Pro X|CyberSkate Labs|25.0|3|0.82|AVAILABLE|95.0|false|Magnetic
+FLYING_CAR|VEH-FC-01|SkyCruiser Pulsar V|OmniAero Orbital|95.0|2|0.95|AVAILABLE|4|true|3.8
+FLYING_CAR|VEH-FC-02|StratoLimo Executive|AeroGrav Dynamics|145.0|1|0.98|AVAILABLE|6|true|4.5
+

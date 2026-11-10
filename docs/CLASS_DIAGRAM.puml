@@ -1,0 +1,448 @@
+@startuml AntigravityVehicleRentalClassDiagram
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title Antigravity Vehicle Rental Service Platform - Complete System Class Diagram (OOP University Project)
+
+' ==============================================================================
+' COMPONENT 1: USER MANAGEMENT MODULE
+' ==============================================================================
+package "Component 1: User Management" {
+    abstract class User {
+        - userId: String
+        - username: String
+        - email: String
+        - password: String
+        - role: String
+        + User(userId: String, username: String, email: String, password: String, role: String)
+        + {abstract} authenticate(inputPassword: String, extraToken: String): boolean
+        + {abstract} toFileString(): String
+        + {abstract} getUserBadge(): String
+        + getUserId(): String
+        + setUserId(userId: String): void
+        + getUsername(): String
+        + setUsername(username: String): void
+        + getEmail(): String
+        + setEmail(email: String): void
+        + getPassword(): String
+        + setPassword(password: String): void
+        + getRole(): String
+    }
+
+    class AdminUser {
+        - adminKey: String
+        - department: String
+        + AdminUser(userId: String, username: String, email: String, password: String, adminKey: String, department: String)
+        + authenticate(inputPassword: String, extraToken: String): boolean
+        + toFileString(): String
+        + getUserBadge(): String
+        + getAdminKey(): String
+        + setAdminKey(adminKey: String): void
+        + getDepartment(): String
+        + setDepartment(department: String): void
+    }
+
+    class RegularUser {
+        - isVip: boolean
+        - loyaltyPoints: int
+        - phoneNumber: String
+        + RegularUser(userId: String, username: String, email: String, password: String, isVip: boolean, points: int, phone: String)
+        + authenticate(inputPassword: String, extraToken: String): boolean
+        + toFileString(): String
+        + getUserBadge(): String
+        + isVip(): boolean
+        + setVip(vip: boolean): void
+        + getLoyaltyPoints(): int
+        + setLoyaltyPoints(points: int): void
+        + addLoyaltyPoints(points: int): void
+        + getPhoneNumber(): String
+        + setPhoneNumber(phone: String): void
+    }
+
+    User <|-- AdminUser : Inheritance
+    User <|-- RegularUser : Inheritance
+
+    class UserRepository {
+        - filePath: String
+        + save(user: User): boolean
+        + findAll(): List<User>
+        + findById(userId: String): Optional<User>
+        + findByUsername(username: String): Optional<User>
+        + update(user: User): boolean
+        + deleteById(userId: String): boolean
+        - parseUser(line: String): User
+    }
+
+    class UserService {
+        - userRepository: UserRepository
+        + registerRegularUser(userId: String, username: String, email: String, password: String, phone: String): User
+        + registerAdminUser(userId: String, username: String, email: String, password: String, adminKey: String, dept: String): User
+        + getAllUsers(): List<User>
+        + getUserById(userId: String): Optional<User>
+        + getUserByUsername(username: String): Optional<User>
+        + updateUser(user: User): boolean
+        + deleteUser(userId: String): boolean
+        + authenticate(username: String, password: String, securityToken: String): Optional<User>
+    }
+
+    class UserController {
+        - userService: UserService
+        + registerUser(payload: Map): ResponseEntity
+        + getAllUsers(): ResponseEntity
+        + getUserById(id: String): ResponseEntity
+        + updateUser(id: String, payload: Map): ResponseEntity
+        + deleteUser(id: String): ResponseEntity
+        + login(credentials: Map): ResponseEntity
+    }
+
+    UserRepository o-- User : Manages
+    UserService --> UserRepository : Uses
+    UserController --> UserService : Invokes
+}
+
+' ==============================================================================
+' COMPONENT 2: ANTIGRAVITY VEHICLE MANAGEMENT MODULE
+' ==============================================================================
+package "Component 2: Antigravity Vehicle Management" {
+    abstract class AntigravityVehicle {
+        - vehicleId: String
+        - modelName: String
+        - manufacturer: String
+        - baseHourlyRate: double
+        - stockQuantity: int
+        - gravDampenerEfficiency: double
+        - status: String
+        + AntigravityVehicle(id: String, model: String, maker: String, rate: double, stock: int, efficiency: double, status: String)
+        + {abstract} calculatePerformanceScore(): double
+        + {abstract} calculateMaxAltitudeMeters(): double
+        + {abstract} getVehicleType(): String
+        + {abstract} toFileString(): String
+        + {abstract} getDetailedSpecs(): String
+        + getEffectiveHourlyRate(): double
+        + isRentable(): boolean
+        + getVehicleId(): String
+        + setVehicleId(id: String): void
+        + getModelName(): String
+        + setModelName(model: String): void
+        + getManufacturer(): String
+        + setManufacturer(maker: String): void
+        + getBaseHourlyRate(): double
+        + setBaseHourlyRate(rate: double): void
+        + getStockQuantity(): int
+        + setStockQuantity(stock: int): void
+        + getGravDampenerEfficiency(): double
+        + setGravDampenerEfficiency(eff: double): void
+        + getStatus(): String
+        + setStatus(status: String): void
+    }
+
+    class Hoverboard {
+        - weightLimitKg: double
+        - hasQuantumStabilizer: boolean
+        - deckGripType: String
+        + Hoverboard(id: String, model: String, maker: String, rate: double, stock: int, eff: double, status: String, weight: double, stabilizer: boolean, grip: String)
+        + calculatePerformanceScore(): double
+        + calculateMaxAltitudeMeters(): double
+        + getVehicleType(): String
+        + getDetailedSpecs(): String
+        + toFileString(): String
+        + getWeightLimitKg(): double
+        + setWeightLimitKg(weight: double): void
+        + isHasQuantumStabilizer(): boolean
+        + setHasQuantumStabilizer(stabilizer: boolean): void
+        + getDeckGripType(): String
+        + setDeckGripType(grip: String): void
+    }
+
+    class FlyingCar {
+        - passengerCapacity: int
+        - hasShielding: boolean
+        - hyperDriveRating: double
+        + FlyingCar(id: String, model: String, maker: String, rate: double, stock: int, eff: double, status: String, capacity: int, shield: boolean, hyperdrive: double)
+        + calculatePerformanceScore(): double
+        + calculateMaxAltitudeMeters(): double
+        + getVehicleType(): String
+        + getDetailedSpecs(): String
+        + toFileString(): String
+        + getPassengerCapacity(): int
+        + setPassengerCapacity(capacity: int): void
+        + isHasShielding(): boolean
+        + setHasShielding(shield: boolean): void
+        + getHyperDriveRating(): double
+        + setHyperDriveRating(rating: double): void
+    }
+
+    AntigravityVehicle <|-- Hoverboard : Inheritance
+    AntigravityVehicle <|-- FlyingCar : Inheritance
+
+    class VehicleRepository {
+        - filePath: String
+        + save(vehicle: AntigravityVehicle): boolean
+        + findAll(): List<AntigravityVehicle>
+        + findById(vehicleId: String): Optional<AntigravityVehicle>
+        + findByType(type: String): List<AntigravityVehicle>
+        + update(vehicle: AntigravityVehicle): boolean
+        + updateStock(vehicleId: String, delta: int): boolean
+        + deleteById(vehicleId: String): boolean
+        - parseVehicle(line: String): AntigravityVehicle
+    }
+
+    class VehicleService {
+        - vehicleRepository: VehicleRepository
+        + addHoverboard(id: String, model: String, maker: String, rate: double, stock: int, eff: double, weight: double, stab: boolean, grip: String): Hoverboard
+        + addFlyingCar(id: String, model: String, maker: String, rate: double, stock: int, eff: double, cap: int, shield: boolean, drive: double): FlyingCar
+        + getAllVehicles(): List<AntigravityVehicle>
+        + getVehicleById(vehicleId: String): Optional<AntigravityVehicle>
+        + getVehiclesByType(type: String): List<AntigravityVehicle>
+        + updateVehicle(vehicle: AntigravityVehicle): boolean
+        + updateStock(vehicleId: String, delta: int): boolean
+        + deleteVehicle(vehicleId: String): boolean
+    }
+
+    class VehicleController {
+        - vehicleService: VehicleService
+        + addVehicle(payload: Map): ResponseEntity
+        + getVehicles(type: String): ResponseEntity
+        + getVehicleById(id: String): ResponseEntity
+        + updateVehicle(id: String, payload: Map): ResponseEntity
+        + deleteVehicle(id: String): ResponseEntity
+    }
+
+    VehicleRepository o-- AntigravityVehicle : Manages
+    VehicleService --> VehicleRepository : Uses
+    VehicleController --> VehicleService : Invokes
+}
+
+' ==============================================================================
+' COMPONENT 3: RENTAL & RETURN TRANSACTIONS MODULE
+' ==============================================================================
+package "Component 3: Rental & Return Transactions" {
+    enum RentalStatus {
+        ACTIVE
+        RETURNED
+        CANCELLED
+    }
+
+    interface FineCalculator {
+        + {abstract} calculateFine(overdueHours: long, baseHourlyRate: double): double
+        + {abstract} getPolicyDescription(): String
+    }
+
+    class RegularFineCalculator {
+        - {static} FIXED_ADMIN_FEE: double = 25.0
+        - {static} OVERDUE_MULTIPLIER: double = 2.0
+        + calculateFine(overdueHours: long, baseHourlyRate: double): double
+        + getPolicyDescription(): String
+    }
+
+    class VIPFineCalculator {
+        - {static} GRACE_PERIOD_HOURS: int = 2
+        - {static} OVERDUE_MULTIPLIER: double = 1.25
+        + calculateFine(overdueHours: long, baseHourlyRate: double): double
+        + getPolicyDescription(): String
+    }
+
+    FineCalculator <|.. RegularFineCalculator : Implements
+    FineCalculator <|.. VIPFineCalculator : Implements
+
+    class RentalTransaction {
+        - rentalId: String
+        - userId: String
+        - vehicleId: String
+        - rentalStartTime: LocalDateTime
+        - expectedReturnTime: LocalDateTime
+        - actualReturnTime: LocalDateTime
+        - hourlyRate: double
+        - depositAmount: double
+        - lateFine: double
+        - totalCharged: double
+        - status: RentalStatus
+        + RentalTransaction(id: String, uid: String, vid: String, start: LocalDateTime, expected: LocalDateTime, actual: LocalDateTime, rate: double, deposit: double, fine: double, total: double, status: RentalStatus)
+        + toFileString(): String
+        + getRentalId(): String
+        + setRentalId(id: String): void
+        + getUserId(): String
+        + setUserId(uid: String): void
+        + getVehicleId(): String
+        + setVehicleId(vid: String): void
+        + getRentalStartTime(): LocalDateTime
+        + getExpectedReturnTime(): LocalDateTime
+        + getActualReturnTime(): LocalDateTime
+        + setActualReturnTime(actual: LocalDateTime): void
+        + getHourlyRate(): double
+        + getDepositAmount(): double
+        + getLateFine(): double
+        + setLateFine(fine: double): void
+        + getTotalCharged(): double
+        + setTotalCharged(total: double): void
+        + getStatus(): RentalStatus
+        + setStatus(status: RentalStatus): void
+    }
+
+    RentalTransaction --> RentalStatus : Uses
+
+    class RentalRepository {
+        - filePath: String
+        + save(tx: RentalTransaction): boolean
+        + findAll(): List<RentalTransaction>
+        + findById(rentalId: String): Optional<RentalTransaction>
+        + findActiveRentals(): List<RentalTransaction>
+        + findByUserId(userId: String): List<RentalTransaction>
+        + update(tx: RentalTransaction): boolean
+        + deleteById(rentalId: String): boolean
+        - parseTransaction(line: String): RentalTransaction
+    }
+
+    class RentalService {
+        - rentalRepository: RentalRepository
+        - vehicleRepository: VehicleRepository
+        - userRepository: UserRepository
+        + rentVehicle(userId: String, vehicleId: String, durationHours: int): RentalTransaction
+        + getAllRentals(): List<RentalTransaction>
+        + getActiveRentals(): List<RentalTransaction>
+        + getRentalById(rentalId: String): Optional<RentalTransaction>
+        + processReturn(rentalId: String, simulatedOverdueHours: int): RentalTransaction
+        + deleteRental(rentalId: String): boolean
+        + resolveFineCalculator(user: User): FineCalculator
+    }
+
+    class RentalController {
+        - rentalService: RentalService
+        - userService: UserService
+        + createRental(payload: Map): ResponseEntity
+        + getRentals(activeOnly: Boolean): ResponseEntity
+        + getRentalById(id: String): ResponseEntity
+        + returnVehicle(id: String, payload: Map): ResponseEntity
+        + deleteRentalLog(id: String): ResponseEntity
+        + previewFine(userId: String, rate: double, overdue: long): ResponseEntity
+    }
+
+    RentalRepository o-- RentalTransaction : Manages
+    RentalService --> RentalRepository : Uses
+    RentalService ..> FineCalculator : Polymorphic Dispatch
+    RentalController --> RentalService : Invokes
+}
+
+' ==============================================================================
+' COMPONENT 4: FEEDBACK & REVIEW MANAGEMENT MODULE
+' ==============================================================================
+package "Component 4: Feedback & Review Management" {
+    abstract class Review {
+        - reviewId: String
+        - vehicleId: String
+        - userId: String
+        - rating: int
+        - comment: String
+        - timestamp: LocalDateTime
+        + Review(reviewId: String, vehicleId: String, userId: String, rating: int, comment: String, timestamp: LocalDateTime)
+        + {abstract} calculateCredibilityWeight(): double
+        + {abstract} getBadge(): String
+        + {abstract} getReviewType(): String
+        + {abstract} toFileString(): String
+        + getReviewId(): String
+        + setReviewId(id: String): void
+        + getVehicleId(): String
+        + setVehicleId(vid: String): void
+        + getUserId(): String
+        + setUserId(uid: String): void
+        + getRating(): int
+        + setRating(rating: int): void
+        + getComment(): String
+        + setComment(comment: String): void
+        + getTimestamp(): LocalDateTime
+    }
+
+    class PublicReview {
+        - sourcePlatform: String
+        + PublicReview(reviewId: String, vid: String, uid: String, rating: int, comment: String, time: LocalDateTime, source: String)
+        + calculateCredibilityWeight(): double
+        + getBadge(): String
+        + getReviewType(): String
+        + toFileString(): String
+        + getSourcePlatform(): String
+        + setSourcePlatform(source: String): void
+    }
+
+    class VerifiedReview {
+        - rentalTransactionId: String
+        - flightComfortScore: int
+        + VerifiedReview(reviewId: String, vid: String, uid: String, rating: int, comment: String, time: LocalDateTime, txId: String, comfort: int)
+        + calculateCredibilityWeight(): double
+        + getBadge(): String
+        + getReviewType(): String
+        + toFileString(): String
+        + getRentalTransactionId(): String
+        + setRentalTransactionId(txId: String): void
+        + getFlightComfortScore(): int
+        + setFlightComfortScore(comfort: int): void
+    }
+
+    Review <|-- PublicReview : Inheritance
+    Review <|-- VerifiedReview : Inheritance
+
+    class ReviewRepository {
+        - filePath: String
+        + save(review: Review): boolean
+        + findAll(): List<Review>
+        + findById(reviewId: String): Optional<Review>
+        + findByVehicleId(vehicleId: String): List<Review>
+        + findByUserId(userId: String): List<Review>
+        + update(review: Review): boolean
+        + deleteById(reviewId: String): boolean
+        - parseReview(line: String): Review
+    }
+
+    class ReviewService {
+        - reviewRepository: ReviewRepository
+        - rentalRepository: RentalRepository
+        + submitPublicReview(vid: String, uid: String, rating: int, comment: String, source: String): PublicReview
+        + submitVerifiedReview(vid: String, uid: String, rating: int, comment: String, txId: String, comfort: int): VerifiedReview
+        + getAllReviews(): List<Review>
+        + getReviewsByVehicle(vehicleId: String): List<Review>
+        + getReviewById(reviewId: String): Optional<Review>
+        + calculateWeightedRating(vehicleId: String): double
+        + updateReview(reviewId: String, rating: int, comment: String): boolean
+        + deleteReview(reviewId: String): boolean
+    }
+
+    class ReviewController {
+        - reviewService: ReviewService
+        + submitReview(payload: Map): ResponseEntity
+        + getReviews(vehicleId: String): ResponseEntity
+        + getReviewById(id: String): ResponseEntity
+        + updateReview(id: String, payload: Map): ResponseEntity
+        + deleteReview(id: String): ResponseEntity
+    }
+
+    ReviewRepository o-- Review : Manages
+    ReviewService --> ReviewRepository : Uses
+    ReviewController --> ReviewService : Invokes
+}
+
+' ==============================================================================
+' REUSABLE FILE STORAGE UTILITY ENGINE
+' ==============================================================================
+package "File Storage Engine (Thread-Safe Utility)" {
+    class FileStorageUtil {
+        - {static} FILE_LOCKS: Map<String, ReentrantReadWriteLock>
+        - FileStorageUtil()
+        - {static} getLock(filePath: String): ReentrantReadWriteLock
+        + {static} ensureFileExists(filePath: String): void
+        + {static} readAllLines(filePath: String): List<String>
+        + {static} appendLine(filePath: String, recordLine: String): boolean
+        + {static} writeAllLines(filePath: String, records: List<String>): boolean
+        + {static} updateLine(filePath: String, matcher: Predicate, newRecord: String): boolean
+        + {static} deleteLine(filePath: String, matcher: Predicate): boolean
+    }
+
+    UserRepository ..> FileStorageUtil : Uses
+    VehicleRepository ..> FileStorageUtil : Uses
+    RentalRepository ..> FileStorageUtil : Uses
+    ReviewRepository ..> FileStorageUtil : Uses
+}
+
+@enduml
+

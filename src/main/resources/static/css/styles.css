@@ -1,0 +1,168 @@
+:root {
+    --bg-dark: #0b0f19;
+    --card-bg: rgba(22, 27, 46, 0.85);
+    --card-border: rgba(56, 189, 248, 0.25);
+    --primary-cyan: #00f2fe;
+    --primary-purple: #7928ca;
+    --accent-glow: rgba(0, 242, 254, 0.35);
+    --text-bright: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(121, 40, 202, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.15) 0px, transparent 50%);
+    color: var(--text-bright);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+}
+
+/* Glassmorphism Navigation */
+.navbar-custom {
+    background: rgba(11, 15, 25, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--primary-cyan), #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Modern Card Styling */
+.cyber-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.cyber-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 12px 30px var(--accent-glow);
+}
+
+/* Antigravity Buttons */
+.btn-cyber-primary {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    color: #0b0f19;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    transition: all 0.2s;
+}
+
+.btn-cyber-primary:hover {
+    box-shadow: 0 0 15px var(--accent-glow);
+    color: #000;
+    transform: scale(1.02);
+}
+
+.btn-cyber-outline {
+    background: transparent;
+    color: var(--primary-cyan);
+    border: 1px solid var(--primary-cyan);
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-cyber-outline:hover {
+    background: var(--primary-cyan);
+    color: #0b0f19;
+}
+
+/* Futuristic Badges */
+.badge-hb {
+    background: rgba(0, 242, 254, 0.15);
+    color: var(--primary-cyan);
+    border: 1px solid var(--primary-cyan);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.badge-fc {
+    background: rgba(168, 85, 247, 0.18);
+    color: #d8b4fe;
+    border: 1px solid #c084fc;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.badge-vip {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #000;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.badge-public {
+    background: #334155;
+    color: #cbd5e1;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+/* Modals & Forms */
+.modal-content {
+    background: #111827;
+    border: 1px solid var(--card-border);
+    color: var(--text-bright);
+}
+
+.form-control, .form-select {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #fff;
+}
+
+.form-control:focus, .form-select:focus {
+    background: #1e293b;
+    border-color: var(--primary-cyan);
+    color: #fff;
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* Tables */
+.table-cyber {
+    color: var(--text-bright);
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.table-cyber thead th {
+    color: var(--text-muted);
+    border-bottom: 2px solid #334155;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.table-cyber tbody tr {
+    background: rgba(30, 41, 59, 0.7);
+    transition: background 0.2s;
+}
+
+.table-cyber tbody tr:hover {
+    background: rgba(51, 65, 85, 0.9);
+}
+
+.table-cyber td {
+    padding: 14px;
+    border: none;
+    vertical-align: middle;
+}
+

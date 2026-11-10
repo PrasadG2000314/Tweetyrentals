@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Feedback & Ratings - Tweety Rentals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/index.html">
+                <i class="bi bi-rocket-takeoff-fill fs-3 text-info"></i>
+                <span>TWEETY RENTALS</span>
+            </a>
+            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <i class="bi bi-list fs-2 text-info"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto gap-3">
+                    <li class="nav-item"><a class="nav-link text-white" href="/index.html"><i class="bi bi-grid-fill"></i> Fleet Catalog</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/rentals.html"><i class="bi bi-clock-history"></i> Rentals & Returns</a></li>
+                    <li class="nav-item"><a class="nav-link active text-info" href="/reviews.html"><i class="bi bi-star-fill"></i> Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/admin.html"><i class="bi bi-shield-lock-fill"></i> Admin Console</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="container py-5">
+        <div class="row align-items-center mb-4">
+            <div class="col-md-7">
+                <h2 class="fw-bold mb-1"><i class="bi bi-chat-heart-fill text-danger"></i> Pilot Reviews & Sentiment</h2>
+                <p class="text-secondary mb-0">Component 4: Polymorphic trust weight scoring and verified flight badges.</p>
+            </div>
+            <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                <button class="btn btn-cyber-primary" onclick="openReviewModal()">
+                    <i class="bi bi-pencil-square"></i> Submit Review
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter & Stats Bar -->
+        <div class="cyber-card p-3 mb-4">
+            <div class="row align-items-center g-3">
+                <div class="col-md-6">
+                    <label class="form-label text-secondary small mb-1">Filter by Vehicle Model:</label>
+                    <select id="vehicleFilter" class="form-select" onchange="loadReviews()">
+                        <option value="">-- All Vehicles --</option>
+                    </select>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <span class="text-secondary small d-block">Polymorphic Weighted Sentiment:</span>
+                    <span id="weightedScore" class="fs-4 fw-bold text-warning">-- / 5.0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="row g-4" id="reviewContainer">
+            <!-- Dynamically populated via JS -->
+        </div>
+    </main>
+
+    <!-- Review Submission Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title"><i class="bi bi-chat-dots text-info"></i> Post Pilot Experience</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="reviewAlert" class="alert d-none"></div>
+                    <form id="reviewForm">
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Review Type</label>
+                            <select id="revType" class="form-select" onchange="toggleReviewTypeFields()">
+                                <option value="PUBLIC">Public Community Review</option>
+                                <option value="VERIFIED">Verified Flight Rental</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Target Vehicle</label>
+                            <select id="revVehicleId" class="form-select" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Reviewer User</label>
+                            <select id="revUserId" class="form-select" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Overall Star Rating</label>
+                            <select id="revRating" class="form-select">
+                                <option value="5">⭐⭐⭐⭐⭐ (5 - Flawless Repulsorlift)</option>
+                                <option value="4">⭐⭐⭐⭐ (4 - Very Good)</option>
+                                <option value="3">⭐⭐⭐ (3 - Average Flight)</option>
+                                <option value="2">⭐⭐ (2 - High Inertia Turbulence)</option>
+                                <option value="1">⭐ (1 - Unacceptable)</option>
+                            </select>
+                        </div>
+
+                        <!-- Verified Only Fields -->
+                        <div id="verifiedFields" class="d-none bg-dark p-3 rounded border border-secondary mb-3">
+                            <div class="mb-2">
+                                <label class="form-label text-secondary small">Rental Transaction ID (Proof of Flight)</label>
+                                <input type="text" id="revTxId" class="form-control form-control-sm" placeholder="e.g. RNT-5001">
+                            </div>
+                            <div>
+                                <label class="form-label text-secondary small">Dampener Comfort Score (1-5)</label>
+                                <input type="number" id="revComfort" class="form-control form-control-sm" min="1" max="5" value="5">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Review Comments</label>
+                            <textarea id="revComment" class="form-control" rows="3" placeholder="Share propulsion stability, acceleration, and handling details..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-cyber-primary w-100">
+                            <i class="bi bi-send-fill"></i> Publish Review
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function loadVehicles() {
+            try {
+                const res = await fetch('/api/vehicles');
+                const vehicles = await res.json();
+                const filter = document.getElementById('vehicleFilter');
+                const modalSel = document.getElementById('revVehicleId');
+                vehicles.forEach(v => {
+                    filter.innerHTML += `<option value="${v.vehicleId}">${v.modelName} (${v.vehicleId})</option>`;
+                    modalSel.innerHTML += `<option value="${v.vehicleId}">${v.modelName} (${v.vehicleId})</option>`;
+                });
+            } catch (e) {
+                console.error("Failed to load vehicles:", e);
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const res = await fetch('/api/users');
+                const users = await res.json();
+                const modalSel = document.getElementById('revUserId');
+                users.forEach(u => {
+                    modalSel.innerHTML += `<option value="${u.userId}">${u.username} (${u.userId})</option>`;
+                });
+            } catch (e) {
+                console.error("Failed to load users:", e);
+            }
+        }
+
+        async function loadReviews() {
+            const vid = document.getElementById('vehicleFilter').value;
+            const container = document.getElementById('reviewContainer');
+            const scoreLabel = document.getElementById('weightedScore');
+
+            try {
+                const url = vid ? `/api/reviews?vehicleId=${vid}` : '/api/reviews';
+                const res = await fetch(url);
+                const data = await res.json();
+
+                let reviews = [];
+                if (vid) {
+                    reviews = data.reviews;
+                    scoreLabel.textContent = `⭐ ${data.weightedAverageRating.toFixed(1)} / 5.0 (Weighted)`;
+                } else {
+                    reviews = data;
+                    scoreLabel.textContent = `-- (Select a vehicle above)`;
+                }
+
+                container.innerHTML = '';
+                if (reviews.length === 0) {
+                    container.innerHTML = '<div class="col-12 text-center py-5 text-secondary">No reviews posted yet. Be the first to share your flight experience!</div>';
+                    return;
+                }
+
+                reviews.forEach(r => {
+                    const isVerified = r.reviewType === 'VERIFIED';
+                    const badgeClass = isVerified ? 'badge-vip' : 'badge-public';
+                    const stars = '⭐'.repeat(r.rating);
+
+                    const card = `
+                        <div class="col-md-6">
+                            <div class="cyber-card p-4 h-100 d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="${badgeClass} small">${r.badge}</span>
+                                        <span class="text-warning">${stars}</span>
+                                    </div>
+                                    <h5 class="fw-bold text-white mb-1">${r.comment}</h5>
+                                    <p class="text-secondary small mb-3">
+                                        <i class="bi bi-clock"></i> ${r.timestamp} | Vehicle: <span class="font-monospace text-info">${r.vehicleId}</span>
+                                    </p>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-25">
+                                    <span class="text-muted small">Credibility Weight: <strong class="text-info">${r.credibilityWeight * 100}%</strong></span>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteReview('${r.reviewId}')">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (err) {
+                console.error("Failed to load reviews:", err);
+            }
+        }
+
+        function toggleReviewTypeFields() {
+            const isVerified = document.getElementById('revType').value === 'VERIFIED';
+            document.getElementById('verifiedFields').classList.toggle('d-none', !isVerified);
+        }
+
+        function openReviewModal() {
+            document.getElementById('reviewAlert').classList.add('d-none');
+            new bootstrap.Modal(document.getElementById('reviewModal')).show();
+        }
+
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const alertBox = document.getElementById('reviewAlert');
+            const type = document.getElementById('revType').value;
+            const payload = {
+                reviewType: type,
+                vehicleId: document.getElementById('revVehicleId').value,
+                userId: document.getElementById('revUserId').value,
+                rating: parseInt(document.getElementById('revRating').value),
+                comment: document.getElementById('revComment').value,
+                rentalTransactionId: document.getElementById('revTxId').value || 'RNT-5001',
+                flightComfortScore: parseInt(document.getElementById('revComfort').value) || 5,
+                sourcePlatform: 'Web Community'
+            };
+
+            try {
+                const res = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alertBox.className = 'alert alert-success';
+                    alertBox.textContent = 'Review published successfully!';
+                    alertBox.classList.remove('d-none');
+                    setTimeout(() => {
+                        bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+                        loadReviews();
+                    }, 1200);
+                } else {
+                    alertBox.className = 'alert alert-danger';
+                    alertBox.textContent = data.message;
+                    alertBox.classList.remove('d-none');
+                }
+            } catch (err) {
+                alertBox.className = 'alert alert-danger';
+                alertBox.textContent = 'Failed to submit review';
+                alertBox.classList.remove('d-none');
+            }
+        });
+
+        async function deleteReview(reviewId) {
+            if (!confirm(`Moderate and delete review ${reviewId}?`)) return;
+            try {
+                const res = await fetch(`/api/reviews/${reviewId}`, { method: 'DELETE' });
+                if (res.ok) {
+                    loadReviews();
+                } else {
+                    alert("Failed to delete review.");
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Initialize on load
+        loadVehicles();
+        loadUsers();
+        loadReviews();
+    </script>
+</body>
+</html>
+
